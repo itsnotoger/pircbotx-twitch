@@ -130,6 +130,10 @@ public class Configuration {
 	protected final ImmutableList<CapHandler> capHandlers;
 	protected final ImmutableSortedMap<Character, ChannelModeHandler> channelModeHandlers;
 	protected final BotFactory botFactory;
+	protected final boolean maxLengthMessageOnly;
+	//	protected final boolean lineEndingCRLF;
+	protected final String lineEnding;
+	protected final boolean codePointLength;
 	
 	/**
 	 * Use {@link Configuration.Builder#buildConfiguration() }.
@@ -240,6 +244,10 @@ public class Configuration {
 		this.channelModeHandlers = channelModeHandlersBuilder.build();
 		this.shutdownHookEnabled = builder.isShutdownHookEnabled();
 		this.botFactory = builder.getBotFactory();
+		this.maxLengthMessageOnly = builder.isMaxLengthMessageOnly();
+//		this.lineEndingCRLF = builder.isLineEndingCRLF();
+		this.lineEnding = builder.isLineEndingCRLF() ? "\r\n" : "\n";
+		this.codePointLength = builder.isCodePointLength();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -247,8 +255,14 @@ public class Configuration {
 		return (M) listenerManager;
 	}
 	
+	/**
+	 * Clear the password buffer if it is no longer needed.
+	 * If the bot is configured for auto-reconnect, the password is still needed.<br>
+	 * TODO create a lazy password supplier interface that fetches the password every time
+	 * it is needed, instead of storing it in the configuration
+	 */
 	public void clearPass() {
-		if (serverPassword != null) {
+		if (serverPassword != null && !autoReconnect && autoReconnectAttempts < 2) {
 			serverPassword.rewind();
 			serverPassword.put(new byte[serverPassword.capacity()]);
 		}
@@ -411,7 +425,13 @@ public class Configuration {
 		 */
 		protected int socketTimeout = 1000 * 60 * 5;
 		/**
-		 * Maximum line length of IRC server, defaults 512 characters
+		 * Maximum line length of IRC server, defaults 512 characters.
+		 * This number may represent the entire message line with prefix,
+		 * suffix and line ending, or just the message part (without line ending)
+		 * depending on the configuration.
+		 * @see #setCodePointLength(boolean)
+		 * @see #setMaxLengthMessageOnly(boolean)
+		 * @see #setLineEndingCRLF(boolean)
 		 */
 		protected int maxLineLength = 512;
 		/**
@@ -539,8 +559,25 @@ public class Configuration {
 		protected BotFactory botFactory = new BotFactory();
 		
 		/**
+		 * By default the max length for a message considers prefix + message + suffix,
+		 * setting this to true will only count the message.
+		 */
+		protected boolean maxLengthMessageOnly = false;
+		/**
+		 * Uses \r\n as the line ending for raw IRC lines by default.
+		 * If this is set to false it will use \n.
+		 */
+		protected boolean lineEndingCRLF = true;
+		/**
 		 * Create with defaults that work in most situations and IRC servers
 		 */
+		/**
+		 * If true this will count codepoints to determine the maximum message length.
+		 * By default it will use String::length which counts the number of characters.
+		 * One codepoint can be multiple characters via code surrogate units.
+		 */
+		protected boolean codePointLength = false;
+		
 		public Builder() {
 		}
 		
@@ -606,6 +643,9 @@ public class Configuration {
 			this.channelModeHandlers.addAll(configuration.getChannelModeHandlers().values());
 			this.shutdownHookEnabled = configuration.isShutdownHookEnabled();
 			this.botFactory = configuration.getBotFactory();
+			this.maxLengthMessageOnly = configuration.isMaxLengthMessageOnly();
+			this.lineEndingCRLF = configuration.getLineEnding().equals("\r\n");
+			this.codePointLength = configuration.isCodePointLength();
 		}
 		
 		/**
@@ -669,6 +709,9 @@ public class Configuration {
 			this.channelModeHandlers.addAll(otherBuilder.getChannelModeHandlers());
 			this.shutdownHookEnabled = otherBuilder.isShutdownHookEnabled();
 			this.botFactory = otherBuilder.getBotFactory();
+			this.maxLengthMessageOnly = otherBuilder.isMaxLengthMessageOnly();
+			this.lineEndingCRLF = otherBuilder.isLineEndingCRLF();
+			this.codePointLength = otherBuilder.isCodePointLength();
 		}
 		
 		public int getSocketConnectTimeout() {

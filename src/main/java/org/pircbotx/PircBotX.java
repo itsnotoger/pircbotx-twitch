@@ -49,6 +49,7 @@ import org.pircbotx.output.OutputCAP;
 import org.pircbotx.output.OutputDCC;
 import org.pircbotx.output.OutputIRC;
 import org.pircbotx.output.OutputRaw;
+import org.pircbotx.output.WordWrapUtil;
 import org.pircbotx.snapshot.UserChannelDaoSnapshot;
 
 import com.google.common.collect.ImmutableMap;
@@ -447,9 +448,24 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 	 * @throws java.io.IOException
 	 */
 	protected void sendRawLineToServer(String line) throws IOException {
-		if (line.length() > configuration.getMaxLineLength() - 2)
-			line = line.substring(0, configuration.getMaxLineLength() - 2);
-		outputWriter.write(line + "\r\n");
+		// TODO cannot properly truncate messages in case of messageLengthOnly setting due to lack of prefix/suffix information
+//		int realMaxLength = configuration.getMaxLineLength()-configuration.lineEnding.length();
+//		if (!configuration.isMaxLengthMessageOnly() && (configuration.isCodePointLength() ? line.codePointCount(0, line.length()) : line.length()) > realMaxLength)
+		int fullLength = WordWrapUtil.length(line, configuration.isCodePointLength());
+		int reduce = 0;
+		if (configuration.isMaxLengthMessageOnly()) {
+			// doing a hacky prefix subtraction here, bad luck for suffix
+			int i = line.indexOf(':');
+			if (i != -1) reduce = i+1;
+			reduce += configuration.getLineEnding().length();
+		}
+		if (fullLength-reduce > configuration.getMaxLineLength()) {
+//			line = line.substring(0, configuration.isCodePointLength() ? line.codePointCount(0, realMaxLength) : realMaxLength);
+//			System.err.println("chop "+line);
+			line = WordWrapUtil.substring(line, 0, configuration.getMaxLineLength()+reduce-configuration.getLineEnding().length(), configuration.isCodePointLength());
+		}
+		outputWriter.write(line);
+		outputWriter.write(configuration.lineEnding);
 		outputWriter.flush();
 		
 		List<String> lineParts = Utils.tokenizeLine(line);

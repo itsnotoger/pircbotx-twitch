@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.Utils;
 import org.slf4j.Marker;
@@ -47,12 +48,12 @@ public class OutputRaw {
 	protected final Condition writeNowCondition = writeLock.newCondition();
 	protected final long delayNanos;
 	protected long lastSentLine = 0;
-
+	
 	public OutputRaw(PircBotX bot) {
 		this.bot = bot;
 		this.delayNanos = bot.getConfiguration().getMessageDelay() * 1000000;
 	}
-
+	
 	/**
 	 * Sends a raw line through the outgoing message queue.
 	 *
@@ -82,7 +83,7 @@ public class OutputRaw {
 			writeLock.unlock();
 		}
 	}
-
+	
 	/**
 	 * Sends a raw line to the IRC server as soon as possible without resetting
 	 * the message delay for messages waiting to send
@@ -93,7 +94,7 @@ public class OutputRaw {
 	public void rawLineNow(String line) {
 		rawLineNow(line, false);
 	}
-
+	
 	/**
 	 * Sends a raw line to the IRC server as soon as possible
 	 * <p>
@@ -109,7 +110,7 @@ public class OutputRaw {
 			Utils.sendRawLineToServer(bot, line);
 			lastSentLine = System.nanoTime();
 			if (resetDelay)
-				//Reset the 
+				//Reset the
 				writeNowCondition.signalAll();
 		} catch (IOException e) {
 			throw new RuntimeException("IO exception when sending line to server, is the network still up? " + exceptionDebug(), e);
@@ -119,33 +120,50 @@ public class OutputRaw {
 			writeLock.unlock();
 		}
 	}
-
+	
 	public void rawLineSplit(String prefix, String message) {
 		rawLineSplit(prefix, message, "");
 	}
-
+	
 	public void rawLineSplit(String prefix, String message, String suffix) {
 		checkNotNull(prefix, "Prefix cannot be null");
 		checkNotNull(message, "Message cannot be null");
 		checkNotNull(suffix, "Suffix cannot be null");
-
+		
+		final Configuration conf = bot.getConfiguration();
+		final String lineEnding = conf.getLineEnding();
+		final String combinedMessage = prefix + message + suffix;
 		//Find if final line is going to be shorter than the max line length
-		String finalMessage = prefix + message + suffix;
-		int realMaxLineLength = bot.getConfiguration().getMaxLineLength() - 2;
-		if (!bot.getConfiguration().isAutoSplitMessage() || finalMessage.length() < realMaxLineLength) {
+		String lengthConsiderMessage = conf.isMaxLengthMessageOnly() ? message : combinedMessage;
+//		int realMessageLength = bot.getConfiguration().isCodePointLength() ? lengthConsiderMessage.codePointCount(0, lengthConsiderMessage.length()) : lengthConsiderMessage.length();
+		int realMessageLength = WordWrapUtil.length(lengthConsiderMessage, conf.isCodePointLength());
+//		int reducedMaxLineLength = bot.getConfiguration().getMaxLineLength() - lineEnding.length();
+		if (!conf.isAutoSplitMessage() || realMessageLength <= conf.getMaxLineLength()) {//TODO changed this from < to <=, not sure if this breaks something
 			//Length is good (or auto split message is false), just go ahead and send it
-			rawLine(finalMessage);
+			rawLine(combinedMessage);
 			return;
 		}
-
+		
 		//Too long, split it up
-		int maxMessageLength = realMaxLineLength - (prefix + suffix).length();
-		//v3 word split, just use Apache commons lang
-		for (String curPart : StringUtils.split(WordUtils.wrap(message, maxMessageLength, "\r\n", true), "\r\n")) {
-			rawLine(prefix + curPart + suffix);
+//		int maxMessageLength = realMaxLineLength - (prefix + suffix).length();
+//		int maxMessageLength = bot.getConfiguration().isMaxLengthMessageOnly() ? reducedMaxLineLength : reducedMaxLineLength - prefix.length() - suffix.length();
+//		if (bot.getConfiguration().isMaxLengthMessageOnly()) {// custom split using code point length
+//			for (String curPart : WordWrapUtil.wrap(message, maxMessageLength, prefix, suffix+lineEnding, bot.getConfiguration().isMaxLengthMessageOnly(), bot.getConfiguration().isCodePointLength())) {
+//				rawLine(curPart);
+//			}
+//		} else {//v3 word split, just use Apache commons lang
+//			for (String curPart : StringUtils.split(WordUtils.wrap(message, maxMessageLength, lineEnding, true), lineEnding)) {
+//				rawLine(prefix + curPart + suffix);
+//			}
+//		}
+//		System.out.println("params | message only:"+conf.isMaxLengthMessageOnly()+", codepoint length:"+conf.isCodePointLength()+", length:"+conf.getMaxLineLength());
+//		System.out.println("wrap this:"+message);
+		for (String line : WordWrapUtil.wrap(message, conf.getMaxLineLength(), prefix, suffix+lineEnding, conf.isMaxLengthMessageOnly(), conf.isCodePointLength())) {
+//			System.err.println(line);
+			rawLine(line);
 		}
 	}
-
+	
 	/**
 	 * Gets the number of lines currently waiting in the outgoing message Queue.
 	 * If this returns 0, then the Queue is empty and any new message is likely
@@ -158,7 +176,7 @@ public class OutputRaw {
 	public int getOutgoingQueueSize() {
 		return writeLock.getHoldCount();
 	}
-
+	
 	protected String exceptionDebug() {
 		return "Connected: " + bot.isConnected() + " | Bot State: " + bot.getState();
 	}

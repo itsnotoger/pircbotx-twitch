@@ -11,6 +11,9 @@ tasks {
     compileJava {
         options.release.set(8)
     }
+    compileTestJava {
+        options.encoding = "UTF-8"
+    }
 }
 
 group = "org.pircbotx"
