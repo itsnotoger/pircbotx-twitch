@@ -54,9 +54,9 @@ public class PingEvent extends Event implements GenericCTCPEvent {
 	/**
 	 * The user that sent the PING request.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The channel that received the ping request. A value of <code>null</code>

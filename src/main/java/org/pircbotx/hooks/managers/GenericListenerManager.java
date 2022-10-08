@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.PircBotX;
-import org.pircbotx.Utils;
 import org.pircbotx.hooks.WaitForQueue;
 
 /**

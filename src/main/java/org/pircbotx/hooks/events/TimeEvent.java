@@ -60,9 +60,9 @@ public class TimeEvent extends Event implements GenericCTCPEvent {
 	/**
 	 * The user that sent the TIME request.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 
 	public TimeEvent(PircBotX bot, Channel channel, @NonNull UserHostmask userHostmask, User user) {

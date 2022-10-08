@@ -63,7 +63,7 @@ import org.pircbotx.output.OutputUser;
  * @author Leon Blakey
  */
 @Data
-@ToString(exclude = {"serverPassword", "nickservPassword"})
+@ToString(exclude = {"serverPassword", "nickservPassword", "nickservCustomMessage"})
 public class Configuration {
 	//WebIRC
 	protected final boolean webIrcEnabled;
@@ -96,6 +96,7 @@ public class Configuration {
 	protected final InetAddress localAddress;
 	protected final Charset encoding;
 	protected final Locale locale;
+	protected final int socketConnectTimeout;
 	protected final int socketTimeout;
 	protected final int maxLineLength;
 	protected final boolean autoSplitMessage;
@@ -108,7 +109,9 @@ public class Configuration {
 	protected final String nickservPassword;
 	protected final String nickservOnSuccess;
 	protected final String nickservNick;
+	protected final String nickservCustomMessage;
 	protected final boolean nickservDelayJoin;
+	protected final boolean userModeHideRealHost;
 	protected final boolean autoReconnect;
 	protected final int autoReconnectDelay;
 	protected final int autoReconnectAttempts;
@@ -153,6 +156,7 @@ public class Configuration {
 		checkNotNull(builder.getSocketFactory(), "Socket factory cannot be null");
 		checkNotNull(builder.getEncoding(), "Encoding cannot be null");
 		checkNotNull(builder.getLocale(), "Locale cannot be null");
+		checkArgument(builder.getSocketConnectTimeout() > 0, "Socket connect timeout must greater than 0");
 		checkArgument(builder.getSocketTimeout() > 0, "Socket timeout must greater than 0");
 		checkArgument(builder.getMaxLineLength() > 0, "Max line length must be positive");
 		checkArgument(builder.getMessageDelay() >= 0, "Message delay must be positive");
@@ -162,6 +166,8 @@ public class Configuration {
 				throw new RuntimeException("Channel must not be blank");
 		if (builder.getNickservPassword() != null)
 			checkArgument(StringUtils.isNotBlank(builder.getNickservPassword()), "Nickserv password cannot be empty");
+		if (builder.getNickservCustomMessage() != null)
+			checkArgument(StringUtils.isNotBlank(builder.getNickservCustomMessage()), "Nickserv custom message cannot be empty");
 		checkArgument(StringUtils.isNotBlank(builder.getNickservOnSuccess()), "Nickserv on success cannot be blank");
 		checkArgument(StringUtils.isNotBlank(builder.getNickservNick()), "Nickserv nick cannot be blank");
 		checkArgument(builder.getAutoReconnectAttempts() > 0, "setAutoReconnectAttempts must be greater than 0");
@@ -198,6 +204,7 @@ public class Configuration {
 		this.localAddress = builder.getLocalAddress();
 		this.encoding = builder.getEncoding();
 		this.locale = builder.getLocale();
+		this.socketConnectTimeout = builder.getSocketConnectTimeout();
 		this.socketTimeout = builder.getSocketTimeout();
 		this.maxLineLength = builder.getMaxLineLength();
 		this.autoSplitMessage = builder.isAutoSplitMessage();
@@ -207,7 +214,9 @@ public class Configuration {
 		this.nickservPassword = builder.getNickservPassword();
 		this.nickservOnSuccess = builder.getNickservOnSuccess();
 		this.nickservNick = builder.getNickservNick();
+		this.nickservCustomMessage = builder.getNickservCustomMessage();
 		this.nickservDelayJoin = builder.isNickservDelayJoin();
+		this.userModeHideRealHost = builder.isUserModeHideRealHost();
 		this.autoReconnect = builder.isAutoReconnect();
 		this.autoReconnectDelay = builder.getAutoReconnectDelay();
 		this.autoReconnectAttempts = builder.getAutoReconnectAttempts();
@@ -373,6 +382,11 @@ public class Configuration {
 		 */
 		protected Locale locale = Locale.getDefault();
 		/**
+		 * Milliseconds to wait to connect to an IRC server address before
+		 * trying the next address, default {@link #getSocketTimeout() }
+		 */
+		protected int socketConnectTimeout = -1;
+		/**
 		 * Milliseconds to wait with no data from the IRC server before sending
 		 * a PING request to check if the socket is still alive, default 5
 		 * minutes (1000x60x5=300,000 milliseconds)
@@ -449,10 +463,20 @@ public class Configuration {
 		 */
 		protected String nickservNick = "nickserv";
 		/**
+		 * Some irc servers require a custom identify string.
+		 * eg: Quakenet: <code>PRIVMSG Q@CServe.quakenet.org :AUTH USER PASS</code>
+		 * default = null
+		 */
+		protected String nickservCustomMessage = null;
+		/**
 		 * Delay joining channels until were identified to nickserv, default
 		 * false
 		 */
 		protected boolean nickservDelayJoin = false;
+		/**
+		 * Sets mode +x on the bot, to hide the real hostname, default = false
+		 */
+		protected boolean userModeHideRealHost = false;
 		/**
 		 * Enable or disable automatic reconnecting, default false. Note that
 		 * you MUST call {@link PircBotX#stopBotReconnect() } when you do not
@@ -537,6 +561,7 @@ public class Configuration {
 			this.localAddress = configuration.getLocalAddress();
 			this.encoding = configuration.getEncoding();
 			this.locale = configuration.getLocale();
+			this.socketConnectTimeout = configuration.getSocketConnectTimeout();
 			this.socketTimeout = configuration.getSocketTimeout();
 			this.maxLineLength = configuration.getMaxLineLength();
 			this.autoSplitMessage = configuration.isAutoSplitMessage();
@@ -546,7 +571,9 @@ public class Configuration {
 			this.nickservPassword = configuration.getNickservPassword();
 			this.nickservOnSuccess = configuration.getNickservOnSuccess();
 			this.nickservNick = configuration.getNickservNick();
+			this.nickservCustomMessage = configuration.getNickservCustomMessage();
 			this.nickservDelayJoin = configuration.isNickservDelayJoin();
+			this.userModeHideRealHost = configuration.isUserModeHideRealHost();
 			this.autoReconnect = configuration.isAutoReconnect();
 			this.autoReconnectDelay = configuration.getAutoReconnectDelay();
 			this.autoReconnectAttempts = configuration.getAutoReconnectAttempts();
@@ -598,6 +625,7 @@ public class Configuration {
 			this.localAddress = otherBuilder.getLocalAddress();
 			this.encoding = otherBuilder.getEncoding();
 			this.locale = otherBuilder.getLocale();
+			this.socketConnectTimeout = otherBuilder.getSocketConnectTimeout();
 			this.socketTimeout = otherBuilder.getSocketTimeout();
 			this.maxLineLength = otherBuilder.getMaxLineLength();
 			this.autoSplitMessage = otherBuilder.isAutoSplitMessage();
@@ -607,7 +635,9 @@ public class Configuration {
 			this.nickservPassword = otherBuilder.getNickservPassword();
 			this.nickservOnSuccess = otherBuilder.getNickservOnSuccess();
 			this.nickservNick = otherBuilder.getNickservNick();
+			this.nickservCustomMessage = otherBuilder.getNickservCustomMessage();
 			this.nickservDelayJoin = otherBuilder.isNickservDelayJoin();
+			this.userModeHideRealHost = otherBuilder.isUserModeHideRealHost();
 			this.autoReconnect = otherBuilder.isAutoReconnect();
 			this.autoReconnectDelay = otherBuilder.getAutoReconnectDelay();
 			this.autoReconnectAttempts = otherBuilder.getAutoReconnectAttempts();
@@ -621,6 +651,10 @@ public class Configuration {
 			this.channelModeHandlers.addAll(otherBuilder.getChannelModeHandlers());
 			this.shutdownHookEnabled = otherBuilder.isShutdownHookEnabled();
 			this.botFactory = otherBuilder.getBotFactory();
+		}
+
+		public int getSocketConnectTimeout() {
+			return (socketConnectTimeout != -1) ? socketConnectTimeout : socketTimeout;
 		}
 
 		/**
@@ -809,7 +843,6 @@ public class Configuration {
 		 *
 		 * @param listenerManager The listener manager
 		 */
-		@SuppressWarnings("unchecked")
 		public Builder setListenerManager(ListenerManager listenerManager) {
 			this.listenerManager = listenerManager;
 			for (Listener curListener : this.listenerManager.getListeners())

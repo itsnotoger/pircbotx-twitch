@@ -28,6 +28,8 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.UserHostmask;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * This event is dispatched whenever a private message is sent to us.
  *
@@ -45,9 +47,9 @@ public class PrivateMessageEvent extends Event implements GenericMessageEvent {
 	/**
 	 * The user who sent the private message.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The actual message.
@@ -55,12 +57,19 @@ public class PrivateMessageEvent extends Event implements GenericMessageEvent {
 	@Getter(onMethod = @_(
 			@Override))
 	protected final String message;
+	
+	/**
+	 * The IrcV3 tags
+	 */
+	@Getter
+	protected final ImmutableMap<String, String> tags;
 
-	public PrivateMessageEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, @NonNull String message) {
+	public PrivateMessageEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, @NonNull String message, ImmutableMap<String, String> tags) {
 		super(bot);
 		this.userHostmask = userHostmask;
 		this.user = user;
 		this.message = message;
+		this.tags = tags;
 	}
 
 	/**

@@ -18,7 +18,6 @@
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableSortedSet;
-import javax.annotation.Nullable;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 import lombok.Data;

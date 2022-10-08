@@ -19,7 +19,6 @@ package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableMap;
 import java.net.InetSocketAddress;
-import javax.annotation.Nullable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;

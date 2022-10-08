@@ -30,6 +30,8 @@ import org.pircbotx.UserHostmask;
 import org.pircbotx.hooks.types.GenericChannelUserEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * This event is dispatched whenever we receive a notice.
  *
@@ -47,9 +49,9 @@ public class NoticeEvent extends Event implements GenericMessageEvent, GenericCh
 	/**
 	 * The user that sent the notice.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The target channel of the notice. A value of <code>null</code> means that
@@ -67,14 +69,21 @@ public class NoticeEvent extends Event implements GenericMessageEvent, GenericCh
 	 * The notice message.
 	 */
 	protected final String notice;
+	
+	/**
+	 * The IrcV3 tags
+	 */
+	@Getter
+	protected final ImmutableMap<String, String> tags;
 
-	public NoticeEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, Channel channel, @NonNull String channelSource, @NonNull String notice) {
+	public NoticeEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, Channel channel, @NonNull String channelSource, @NonNull String notice, ImmutableMap<String, String> tags) {
 		super(bot);
 		this.user = user;
 		this.userHostmask = userHostmask;
 		this.channel = channel;
 		this.channelSource = channelSource;
 		this.notice = notice;
+		this.tags = tags;
 	}
 
 	/**

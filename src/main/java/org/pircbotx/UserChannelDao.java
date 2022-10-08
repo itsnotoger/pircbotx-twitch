@@ -19,7 +19,6 @@ package org.pircbotx;
 
 import static com.google.common.base.Preconditions.*;
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
 import java.io.Closeable;

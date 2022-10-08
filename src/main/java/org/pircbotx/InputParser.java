@@ -31,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -339,7 +338,7 @@ public class InputParser implements Closeable {
 		//Make sure this is a valid IRC line
 		if (!sourceRaw.startsWith(":")) {
 			// We don't know what this line means.
-			configuration.getListenerManager().onEvent(new UnknownEvent(bot, line));
+			configuration.getListenerManager().onEvent(new UnknownEvent(bot, target, "", command, line, parsedLine, tags.build()));
 			if (!bot.loggedIn)
 				//Pass to CapHandlers, could be important
 				for (CapHandler curCapHandler : configuration.getCapHandlers())
@@ -388,6 +387,10 @@ public class InputParser implements Closeable {
 			//Handle automatic on connect stuff
 			if (configuration.getNickservPassword() != null)
 				bot.sendIRC().identify(configuration.getNickservPassword());
+			if (configuration.getNickservCustomMessage() != null)
+				bot.sendRaw().rawLine(configuration.getNickservCustomMessage());
+			if (configuration.isUserModeHideRealHost())
+				bot.sendIRC().mode(bot.getNick(), "+x");
 			ImmutableMap<String, String> autoConnectChannels = bot.reconnectChannels();
 			if (autoConnectChannels == null)
 				if (configuration.isNickservDelayJoin())
@@ -501,7 +504,7 @@ public class InputParser implements Closeable {
 				configuration.getListenerManager().onEvent(new VersionEvent(bot, source, sourceUser, channel));
 			else if (request.startsWith("ACTION "))
 				// ACTION request
-				configuration.getListenerManager().onEvent(new ActionEvent(bot, source, sourceUser, channel, target, request.substring(7)));
+				configuration.getListenerManager().onEvent(new ActionEvent(bot, source, sourceUser, channel, target, request.substring(7), tags));
 			else if (request.startsWith("PING "))
 				// PING request
 				configuration.getListenerManager().onEvent(new PingEvent(bot, source, sourceUser, channel, request.substring(5)));
@@ -516,10 +519,10 @@ public class InputParser implements Closeable {
 				boolean success = bot.getDccHandler().processDcc(source, sourceUser, request);
 				if (!success)
 					// The DccManager didn't know what to do with the line.
-					configuration.getListenerManager().onEvent(new UnknownEvent(bot, line));
+					configuration.getListenerManager().onEvent(new UnknownEvent(bot, target, source.getNick(), command, line, parsedLine, tags));
 			} else
 				// An unknown CTCP message - ignore it.
-				configuration.getListenerManager().onEvent(new UnknownEvent(bot, line));
+				configuration.getListenerManager().onEvent(new UnknownEvent(bot, target, source.getNick(), command, line, parsedLine, tags));
 		} else if (command.equals("PRIVMSG") && channel != null) {
 			// This is a normal message to a channel.
 			sourceUser = createUserIfNull(sourceUser, source);
@@ -529,7 +532,7 @@ public class InputParser implements Closeable {
 			//Add to private message
 			sourceUser = createUserIfNull(sourceUser, source);
 			bot.getUserChannelDao().addUserToPrivate(sourceUser);
-			configuration.getListenerManager().onEvent(new PrivateMessageEvent(bot, source, sourceUser, message));
+			configuration.getListenerManager().onEvent(new PrivateMessageEvent(bot, source, sourceUser, message, tags));
 		} else if (command.equals("JOIN")) {
 			// Someone is joining a channel.
 			if (source.getNick().equalsIgnoreCase(bot.getNick())) {
@@ -577,7 +580,7 @@ public class InputParser implements Closeable {
 			configuration.getListenerManager().onEvent(new NickChangeEvent(bot, source.getNick(), newNick, source, sourceUser));
 		} else if (command.equals("NOTICE")) {
 			// Someone is sending a notice.
-			configuration.getListenerManager().onEvent(new NoticeEvent(bot, source, sourceUser, channel, target, message));
+			configuration.getListenerManager().onEvent(new NoticeEvent(bot, source, sourceUser, channel, target, message, tags));
 		} else if (command.equals("QUIT")) {
 			UserChannelDaoSnapshot daoSnapshot;
 			UserSnapshot sourceSnapshot;
@@ -639,7 +642,7 @@ public class InputParser implements Closeable {
 		else
 			// If we reach this point, then we've found something that the PircBotX
 			// Doesn't currently deal with.
-			configuration.getListenerManager().onEvent(new UnknownEvent(bot, line));
+			configuration.getListenerManager().onEvent(new UnknownEvent(bot, target, source.getNick(), command, line, parsedLine, tags));
 	}
 
 	/**
@@ -783,7 +786,7 @@ public class InputParser implements Closeable {
 		else if (code == RPL_MOTD)
 			//Example: 372 PircBotX :- Welcome to wolfe.freenode.net in Manchester, England, Uk!  Thanks to
 			//This is part of the MOTD, add a new line
-			motdBuilder.append(CharMatcher.WHITESPACE.trimFrom(parsedResponse.get(1).substring(1))).append("\n");
+			motdBuilder.append(CharMatcher.WHITESPACE.trimFrom(parsedResponse.get(1).substring(1))).append('\n');
 		else if (code == RPL_ENDOFMOTD) {
 			//Example: PircBotX :End of /MOTD command.
 			//End of MOTD, clean it and dispatch MotdEvent

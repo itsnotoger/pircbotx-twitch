@@ -57,9 +57,9 @@ public class SuperOpEvent extends Event implements GenericChannelModeRecipientEv
 	/**
 	 * The user that performed the mode change.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The nick of the user that got 'voiced'.

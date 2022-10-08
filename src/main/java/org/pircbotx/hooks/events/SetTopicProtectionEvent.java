@@ -56,9 +56,9 @@ public class SetTopicProtectionEvent extends Event implements GenericChannelMode
 	/**
 	 * The user that performed the mode change.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 
 	public SetTopicProtectionEvent(PircBotX bot, @NonNull Channel channel, @NonNull UserHostmask userHostmask, User user) {

@@ -57,9 +57,9 @@ public class HalfOpEvent extends Event implements GenericChannelModeRecipientEve
 	/**
 	 * The user that performed the mode change.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @__({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The user hostmask that received the half-op
@@ -70,9 +70,9 @@ public class HalfOpEvent extends Event implements GenericChannelModeRecipientEve
 	/**
 	 * The user that received the half-op
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @__({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User recipient;
 	/**
 	 * If the half-op status was given or removed.

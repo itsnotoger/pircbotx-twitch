@@ -47,9 +47,9 @@ public class JoinEvent extends Event implements GenericChannelUserEvent {
 	/**
 	 * The user who joined the channel.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The user hostmask who joined the channel.

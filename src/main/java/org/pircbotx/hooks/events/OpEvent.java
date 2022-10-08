@@ -55,9 +55,9 @@ public class OpEvent extends Event implements GenericChannelModeRecipientEvent {
 	/**
 	 * The user that performed the mode change
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The user hostmask that received the Operator status
@@ -68,9 +68,9 @@ public class OpEvent extends Event implements GenericChannelModeRecipientEvent {
 	/**
 	 * The user that received the Operator status
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User recipient;
 	/**
 	 * If the operator status was given or removed.

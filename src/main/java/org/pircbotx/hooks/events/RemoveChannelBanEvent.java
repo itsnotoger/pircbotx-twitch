@@ -55,9 +55,9 @@ public class RemoveChannelBanEvent extends Event implements GenericChannelModeEv
 	/**
 	 * The user that performed the mode change.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The ban hostmask that was set.

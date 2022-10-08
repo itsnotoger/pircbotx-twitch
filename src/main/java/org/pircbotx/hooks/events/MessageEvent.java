@@ -19,7 +19,6 @@ package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableMap;
 import javax.annotation.Nullable;
-import java.util.Map;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 import lombok.Data;
@@ -60,9 +59,9 @@ public class MessageEvent extends Event implements GenericMessageEvent, GenericC
 	/**
 	 * The user who sent the message.
 	 */
-	@Getter(onMethod = @_(
+	@Getter(onMethod = @_({
 			@Override,
-			@Nullable))
+			@Nullable}))
 	protected final User user;
 	/**
 	 * The actual message sent to the channel.
