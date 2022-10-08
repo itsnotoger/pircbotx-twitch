@@ -17,25 +17,21 @@
  */
 package org.pircbotx;
 
-import static com.google.common.base.Preconditions.*;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.net.SocketFactory;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.pircbotx.cap.CapHandler;
 import org.pircbotx.cap.EnableCapHandler;
@@ -55,6 +51,17 @@ import org.pircbotx.output.OutputDCC;
 import org.pircbotx.output.OutputIRC;
 import org.pircbotx.output.OutputRaw;
 import org.pircbotx.output.OutputUser;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import lombok.Data;
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * Immutable configuration for PircBotX created from
@@ -91,7 +98,9 @@ public class Configuration {
 	protected final boolean dccPassiveRequest;
 	//Connect information
 	protected final ImmutableList<ServerEntry> servers;
-	protected final String serverPassword;
+	//	protected final String serverPassword;
+//	protected final byte[] serverPassword;
+	protected final ByteBuffer serverPassword;
 	protected final SocketFactory socketFactory;
 	protected final InetAddress localAddress;
 	protected final Charset encoding;
@@ -121,7 +130,7 @@ public class Configuration {
 	protected final ImmutableList<CapHandler> capHandlers;
 	protected final ImmutableSortedMap<Character, ChannelModeHandler> channelModeHandlers;
 	protected final BotFactory botFactory;
-
+	
 	/**
 	 * Use {@link Configuration.Builder#buildConfiguration() }.
 	 *
@@ -176,7 +185,7 @@ public class Configuration {
 		checkNotNull(builder.getCapHandlers(), "Cap handlers list cannot be null");
 		checkNotNull(builder.getChannelModeHandlers(), "Channel mode handlers list cannot be null");
 		checkNotNull(builder.getBotFactory(), "Must specify bot factory");
-
+		
 		this.webIrcEnabled = builder.isWebIrcEnabled();
 		this.webIrcUsername = builder.getWebIrcUsername();
 		this.webIrcHostname = builder.getWebIrcHostname();
@@ -232,12 +241,19 @@ public class Configuration {
 		this.shutdownHookEnabled = builder.isShutdownHookEnabled();
 		this.botFactory = builder.getBotFactory();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public <M extends ListenerManager> M getListenerManager() {
 		return (M) listenerManager;
 	}
-
+	
+	public void clearPass() {
+		if (serverPassword != null) {
+			serverPassword.rewind();
+			serverPassword.put(new byte[serverPassword.capacity()]);
+		}
+	}
+	
 	/**
 	 * Builder to create an immutable {@link Configuration}.
 	 */
@@ -361,7 +377,9 @@ public class Configuration {
 		/**
 		 * Password for IRC server, default null
 		 */
-		protected String serverPassword = null;
+//		protected String serverPassword = null;
+//		protected byte[] serverPassword = null;
+		protected ByteBuffer serverPassword = null;
 		/**
 		 * Socket factory for connections, defaults to {@link SocketFactory#getDefault()
 		 * }
@@ -440,7 +458,7 @@ public class Configuration {
 		 */
 		protected String nickservPassword = null;
 		/**
-		 * Case-insensitive message a user with 
+		 * Case-insensitive message a user with
 		 * {@link #setNickservNick(java.lang.String) } in its hostmask will
 		 * always contain when we have successfully identified, defaults to "you
 		 * are now" which which matches all of the following known server
@@ -507,9 +525,9 @@ public class Configuration {
 		 * away-notify but ignoring if the server doesn't support them
 		 */
 		protected final List<CapHandler> capHandlers = Lists.<CapHandler>newArrayList(
-				new EnableCapHandler("multi-prefix", true),
-				new EnableCapHandler("away-notify", true)
-		);
+						new EnableCapHandler("multi-prefix", true),
+						new EnableCapHandler("away-notify", true)
+																																								 );
 		/**
 		 * Handlers for channel modes, defaults to built-in handlers which cover
 		 * basic modes that are generally supported on most IRC servers
@@ -519,13 +537,13 @@ public class Configuration {
 		 * The {@link BotFactory} to use
 		 */
 		protected BotFactory botFactory = new BotFactory();
-
+		
 		/**
 		 * Create with defaults that work in most situations and IRC servers
 		 */
 		public Builder() {
 		}
-
+		
 		/**
 		 * Copy values from an existing Configuration.
 		 *
@@ -589,7 +607,7 @@ public class Configuration {
 			this.shutdownHookEnabled = configuration.isShutdownHookEnabled();
 			this.botFactory = configuration.getBotFactory();
 		}
-
+		
 		/**
 		 * Copy values from another builder.
 		 *
@@ -652,11 +670,11 @@ public class Configuration {
 			this.shutdownHookEnabled = otherBuilder.isShutdownHookEnabled();
 			this.botFactory = otherBuilder.getBotFactory();
 		}
-
+		
 		public int getSocketConnectTimeout() {
 			return (socketConnectTimeout != -1) ? socketConnectTimeout : socketTimeout;
 		}
-
+		
 		/**
 		 * Timeout for user to accept a sent DCC request. Defaults to {@link #getSocketTimeout()
 		 * }
@@ -664,7 +682,7 @@ public class Configuration {
 		public int getDccAcceptTimeout() {
 			return (dccAcceptTimeout != -1) ? dccAcceptTimeout : socketTimeout;
 		}
-
+		
 		/**
 		 * Timeout for a user to accept a resumed DCC request. Defaults to {@link #getDccResumeAcceptTimeout()
 		 * }
@@ -672,7 +690,7 @@ public class Configuration {
 		public int getDccResumeAcceptTimeout() {
 			return (dccResumeAcceptTimeout != -1) ? dccResumeAcceptTimeout : getDccAcceptTimeout();
 		}
-
+		
 		/**
 		 * Add a collection of cap handlers
 		 *
@@ -685,7 +703,7 @@ public class Configuration {
 			}
 			return this;
 		}
-
+		
 		/**
 		 * Add a cap handler
 		 *
@@ -696,7 +714,7 @@ public class Configuration {
 			getCapHandlers().add(handler);
 			return this;
 		}
-
+		
 		/**
 		 * Add a collection of listeners to the current ListenerManager
 		 *
@@ -709,7 +727,7 @@ public class Configuration {
 			}
 			return this;
 		}
-
+		
 		/**
 		 * Add a listener to the current ListenerManager
 		 *
@@ -720,14 +738,14 @@ public class Configuration {
 			getListenerManager().addListener(listener);
 			return this;
 		}
-
+		
 		public Builder addAutoJoinChannels(@NonNull Iterable<String> channels) {
 			for (String curChannel : channels) {
 				addAutoJoinChannel(curChannel);
 			}
 			return this;
 		}
-
+		
 		/**
 		 * Add a channel to join on connect
 		 *
@@ -740,7 +758,7 @@ public class Configuration {
 			getAutoJoinChannels().put(channel, "");
 			return this;
 		}
-
+		
 		/**
 		 * Utility method for <code>{@link #getAutoJoinChannels()}.put(channel,
 		 * key)</code>
@@ -763,7 +781,7 @@ public class Configuration {
 		}
 		
 		/**
-		 * @deprecated Use {@link #addServer(java.lang.String)},  
+		 * @deprecated Use {@link #addServer(java.lang.String)},
 		 * will be removed in future releases
 		 */
 		@Deprecated
@@ -775,7 +793,7 @@ public class Configuration {
 		}
 		
 		/**
-		 * @deprecated Use {@link #addServer(java.lang.String, int)},  
+		 * @deprecated Use {@link #addServer(java.lang.String, int)},
 		 * will be removed in future releases
 		 */
 		@Deprecated
@@ -787,7 +805,7 @@ public class Configuration {
 		}
 		
 		/**
-		 * @deprecated Use {@link #addServer(java.lang.String)},  
+		 * @deprecated Use {@link #addServer(java.lang.String)},
 		 * will be removed in future releases
 		 */
 		@Deprecated
@@ -801,7 +819,7 @@ public class Configuration {
 		}
 		
 		/**
-		 * @deprecated Use {@link #addServer(java.lang.String, int)},  
+		 * @deprecated Use {@link #addServer(java.lang.String, int)},
 		 * will be removed in future releases
 		 */
 		@Deprecated
@@ -813,28 +831,28 @@ public class Configuration {
 				servers.add(new ServerEntry("unset", port));
 			return this;
 		}
-
+		
 		public Builder addServer(@NonNull String server) {
 			servers.add(new ServerEntry(server, 6667));
 			return this;
 		}
-
+		
 		public Builder addServer(@NonNull String server, int port) {
 			servers.add(new ServerEntry(server, port));
 			return this;
 		}
-
+		
 		public Builder addServer(@NonNull ServerEntry serverEntry) {
 			servers.add(serverEntry);
 			return this;
 		}
-
+		
 		public Builder addServers(@NonNull Iterable<ServerEntry> serverEnteries) {
 			for (ServerEntry curServerEntry : serverEnteries)
 				servers.add(curServerEntry);
 			return this;
 		}
-
+		
 		/**
 		 * Sets a new ListenerManager. <b>NOTE:</b> The {@link CoreHooks} are
 		 * added when this method is called. If you do not want this, remove
@@ -851,20 +869,20 @@ public class Configuration {
 			listenerManager.addListener(new CoreHooks());
 			return this;
 		}
-
+		
 		public void replaceCoreHooksListener(CoreHooks extended) {
 			//Find the corehooks impl
 			CoreHooks orig = null;
 			for (Listener curListener : this.listenerManager.getListeners())
 				if (curListener instanceof CoreHooks)
 					orig = (CoreHooks) curListener;
-
+			
 			//Swap
 			if (orig != null)
 				this.listenerManager.removeListener(orig);
 			addListener(extended);
 		}
-
+		
 		/**
 		 * Returns the current ListenerManager in use by this bot. Note that the
 		 * default listener manager ({@link ListenerManager}) is lazy loaded
@@ -878,14 +896,14 @@ public class Configuration {
 				setListenerManager(new ThreadedListenerManager());
 			return (M) listenerManager;
 		}
-
+		
 		/**
 		 * Builds a Configuration instance from the information in this builder
 		 */
 		public Configuration buildConfiguration() {
 			return new Configuration(this);
 		}
-
+		
 		/**
 		 * Create a <i>new</i> builder with the specified hostname then build a
 		 * configuration. Useful for template builders
@@ -894,10 +912,10 @@ public class Configuration {
 		 */
 		public Configuration buildForServer(String hostname) {
 			return new Builder(this)
-					.addServer(hostname)
-					.buildConfiguration();
+							.addServer(hostname)
+							.buildConfiguration();
 		}
-
+		
 		/**
 		 * Create a <i>new</i> builder with the specified hostname and port then
 		 * build a configuration. Useful for template builders
@@ -906,24 +924,32 @@ public class Configuration {
 		 */
 		public Configuration buildForServer(String hostname, int port) {
 			return new Builder(this)
-					.addServer(hostname, port)
-					.buildConfiguration();
+							.addServer(hostname, port)
+							.buildConfiguration();
 		}
-
+		
 		/**
 		 * Create a <i>new</i> builder with the specified hostname, port, and
 		 * password then build a configuration. Useful for template builders
 		 *
 		 * @param hostname
 		 */
-		public Configuration buildForServer(String hostname, int port, String password) {
+//		public Configuration buildForServer(String hostname, int port, String password) {
+		public Configuration buildForServer(String hostname, int port, ByteBuffer password) {
 			return new Builder(this)
-					.addServer(hostname, port)
-					.setServerPassword(password)
-					.buildConfiguration();
+							.addServer(hostname, port)
+							.setServerPassword(password)
+							.buildConfiguration();
 		}
-	}
 
+//		public void clearPass() {
+//			if (serverPassword != null) {
+//				serverPassword.rewind();
+//				serverPassword.put(new byte[serverPassword.capacity()]);
+//			}
+//		}
+	}
+	
 	/**
 	 * Factory for various internal bot classes.
 	 */
@@ -933,82 +959,82 @@ public class Configuration {
 		public UserChannelDao createUserChannelDao(PircBotX bot) {
 			return new UserChannelDao(bot, bot.getConfiguration().getBotFactory());
 		}
-
+		
 		public OutputRaw createOutputRaw(PircBotX bot) {
 			return new OutputRaw(bot);
 		}
-
+		
 		public OutputCAP createOutputCAP(PircBotX bot) {
 			return new OutputCAP(bot);
 		}
-
+		
 		public OutputIRC createOutputIRC(PircBotX bot) {
 			return new OutputIRC(bot);
 		}
-
+		
 		public OutputDCC createOutputDCC(PircBotX bot) {
 			return new OutputDCC(bot);
 		}
-
+		
 		public OutputChannel createOutputChannel(PircBotX bot, Channel channel) {
 			return new OutputChannel(bot, channel);
 		}
-
+		
 		public OutputUser createOutputUser(PircBotX bot, UserHostmask user) {
 			return new OutputUser(bot, user);
 		}
-
+		
 		public InputParser createInputParser(PircBotX bot) {
 			return new InputParser(bot);
 		}
-
+		
 		public DccHandler createDccHandler(PircBotX bot) {
 			return new DccHandler(bot);
 		}
-
+		
 		public SendChat createSendChat(PircBotX bot, User user, Socket socket) throws IOException {
 			return new SendChat(user, socket, bot.getConfiguration().getEncoding());
 		}
-
+		
 		public ReceiveChat createReceiveChat(PircBotX bot, User user, Socket socket) throws IOException {
 			return new ReceiveChat(user, socket, bot.getConfiguration().getEncoding());
 		}
-
+		
 		public SendFileTransfer createSendFileTransfer(PircBotX bot, Socket socket, User user, File file, long startPosition) {
 			return new SendFileTransfer(bot.getConfiguration(), socket, user, file, startPosition);
 		}
-
+		
 		public ReceiveFileTransfer createReceiveFileTransfer(PircBotX bot, Socket socket, User user, File file, long startPosition, long fileSize) {
 			return new ReceiveFileTransfer(bot.getConfiguration(), socket, user, file, startPosition, fileSize);
 		}
-
+		
 		public ServerInfo createServerInfo(PircBotX bot) {
 			return new ServerInfo(bot);
 		}
-
+		
 		public UserHostmask createUserHostmask(PircBotX bot, String hostmask) {
 			return new UserHostmask(bot, hostmask);
 		}
-
+		
 		public UserHostmask createUserHostmask(PircBotX bot, String extbanPrefix, String nick, String login, String hostname) {
 			return new UserHostmask(bot, extbanPrefix, nick, login, hostname);
 		}
-
+		
 		public User createUser(UserHostmask userHostmask) {
 			return new User(userHostmask);
 		}
-
+		
 		public Channel createChannel(PircBotX bot, String name) {
 			return new Channel(bot, name);
 		}
 	}
-
+	
 	@Data
 	public static class ServerEntry {
 		@NonNull
 		private final String hostname;
 		private final int port;
-
+		
 		@Override
 		public String toString() {
 			return hostname + ":" + port;

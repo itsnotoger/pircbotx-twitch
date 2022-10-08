@@ -20,6 +20,9 @@ package org.pircbotx;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import org.pircbotx.hooks.events.ConnectEvent;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.pircbotx.hooks.Event;
 import java.io.ByteArrayInputStream;
@@ -205,7 +208,7 @@ public class PircBotXConnectTest {
 		//Connect the bot to the socket
 		PircBotX bot = new PircBotX(configurationBuilder
 				.addServer(address.getHostName(), 6667)
-				.setServerPassword("pa55w0rd")
+				.setServerPassword(ByteBuffer.wrap("pa55w0rd".getBytes(StandardCharsets.UTF_8)))
 				.setSocketFactory(socketFactory)
 				.setCapEnabled(true)
 				.buildConfiguration());

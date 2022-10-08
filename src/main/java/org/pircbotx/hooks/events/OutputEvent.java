@@ -18,10 +18,13 @@
 package org.pircbotx.hooks.events;
 
 import java.util.List;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.ListIterator;
+
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * A command sent to the IRC server from PircBotX
@@ -38,13 +41,21 @@ public class OutputEvent extends Event {
 	 * @see org.pircbotx.Utils#tokenizeLine(java.lang.String)
 	 */
 	private final List<String> lineParsed;
-
+	
 	public OutputEvent(PircBotX bot, String rawLine, List<String> lineParsed) {
 		super(bot);
+		if (rawLine.startsWith("PASS ")) {
+			rawLine = "PASS ***";
+			ListIterator<String> it = lineParsed.listIterator(1);
+			while (it.hasNext()) {
+				it.next();
+				it.set("***");
+			}
+		}
 		this.rawLine = rawLine;
 		this.lineParsed = lineParsed;
 	}
-
+	
 	/**
 	 * @param response
 	 * @deprecated Cannot respond to output
