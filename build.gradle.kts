@@ -10,7 +10,8 @@ repositories {
 
 tasks {
     compileJava {
-        options.release.set(8)
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
     }
     compileTestJava {
         options.encoding = "UTF-8"
@@ -18,7 +19,7 @@ tasks {
 }
 
 group = "org.pircbotx"
-version = "2.1-twitchify"
+version = "2.1.1-twitchify"
 
 dependencies {
     implementation("com.google.guava:guava:18.0") { because("CharMatcher.WHITESPACE ref") }
