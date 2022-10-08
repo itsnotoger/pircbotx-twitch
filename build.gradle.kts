@@ -8,6 +8,9 @@ repositories {
     mavenCentral()
 }
 
+group = "org.pircbotx"
+version = "2.1.2-twitchify"
+
 tasks {
     compileJava {
         sourceCompatibility = "1.8"
@@ -18,8 +21,22 @@ tasks {
     }
 }
 
-group = "org.pircbotx"
-version = "2.1.1-twitchify"
+java {
+    withSourcesJar()
+//    withJavadocJar() TODO needs a lot of fixing
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = group.toString()
+            artifactId = rootProject.name
+            version = version.toString()
+
+            from(components["java"])
+        }
+    }
+}
 
 dependencies {
     implementation("com.google.guava:guava:18.0") { because("CharMatcher.WHITESPACE ref") }
