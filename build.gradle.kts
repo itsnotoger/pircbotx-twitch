@@ -9,7 +9,7 @@ repositories {
 }
 
 group = "org.pircbotx"
-version = "2.1.2-twitchify"
+version = "2.1.3-twitchify"
 
 tasks {
     compileJava {
