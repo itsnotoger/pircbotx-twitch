@@ -39,7 +39,8 @@ publishing {
 }
 
 dependencies {
-    implementation("com.google.guava:guava:18.0") { because("CharMatcher.WHITESPACE ref") }
+    api("com.google.guava:guava:18.0") { because("CharMatcher.WHITESPACE ref") }
+
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.slf4j:slf4j-api:1.7.36")
     implementation("info.unterrainer.java.tools:nullannotations:0.3")
