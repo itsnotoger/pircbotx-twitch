@@ -17,7 +17,7 @@
  */
 package org.pircbotx.hooks.types;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.pircbotx.snapshot.UserChannelDaoSnapshot;
 
 /**

@@ -17,7 +17,7 @@
  */
 package org.pircbotx.hooks.events;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.*;
 import org.pircbotx.User;

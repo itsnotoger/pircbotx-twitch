@@ -18,7 +18,7 @@
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableList;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.*;
 import org.pircbotx.Channel;

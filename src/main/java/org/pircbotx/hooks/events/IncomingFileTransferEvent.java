@@ -20,7 +20,7 @@ package org.pircbotx.hooks.events;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.*;
 import org.pircbotx.hooks.Event;

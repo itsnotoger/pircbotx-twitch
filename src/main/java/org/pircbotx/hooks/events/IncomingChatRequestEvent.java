@@ -19,9 +19,9 @@ package org.pircbotx.hooks.events;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import javax.annotation.Nullable;
 
 import lombok.*;
+import org.jetbrains.annotations.Nullable;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;

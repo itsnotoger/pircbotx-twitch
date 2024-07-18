@@ -45,6 +45,10 @@ dependencies {
     implementation("info.unterrainer.java.tools:nullannotations:0.3")
     implementation("commons-codec:commons-codec:1.13")
 
+    implementation("org.jetbrains:annotations:24.1.0") {
+        because("modularized jar needed")
+    }
+
     testImplementation("org.testng:testng:7.7.0")
     testImplementation("org.mockito:mockito-core:2.0.40-beta")
     testImplementation("ch.qos.logback:logback-classic:1.4.14")

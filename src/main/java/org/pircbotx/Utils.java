@@ -17,11 +17,10 @@
  */
 package org.pircbotx;
 
-import com.google.common.base.CharMatcher;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.pircbotx.hooks.Event;
