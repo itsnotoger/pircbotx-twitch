@@ -18,10 +18,8 @@
 package org.pircbotx.hooks.events;
 
 import javax.annotation.Nullable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+
+import lombok.*;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.hooks.Event;
@@ -37,7 +35,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class NoticeEvent extends Event implements GenericMessageEvent, GenericChannelUserEvent {
 	/**

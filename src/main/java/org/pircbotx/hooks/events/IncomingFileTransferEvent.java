@@ -21,10 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import javax.annotation.Nullable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+
+import lombok.*;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -62,7 +60,8 @@ import org.pircbotx.hooks.types.GenericDCCEvent;
  * @author Leon Blakey
  * @see FileTransfer
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class IncomingFileTransferEvent extends Event implements GenericDCCEvent {
 	@Getter(onMethod = @__({

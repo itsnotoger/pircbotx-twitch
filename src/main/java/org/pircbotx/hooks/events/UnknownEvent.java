@@ -18,10 +18,7 @@
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 
@@ -33,7 +30,8 @@ import java.util.List;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class UnknownEvent extends Event {
 	/**

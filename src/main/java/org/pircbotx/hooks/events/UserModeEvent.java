@@ -18,11 +18,9 @@
 package org.pircbotx.hooks.events;
 
 import javax.annotation.Nullable;
+
+import lombok.*;
 import org.pircbotx.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
 import org.pircbotx.PircBotX;
 import org.pircbotx.UserHostmask;
 import org.pircbotx.hooks.Event;
@@ -33,7 +31,8 @@ import org.pircbotx.hooks.types.GenericUserModeEvent;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class UserModeEvent extends Event implements GenericUserModeEvent {
 	/**

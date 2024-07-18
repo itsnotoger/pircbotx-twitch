@@ -18,9 +18,7 @@
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableList;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.ReplyConstants;
@@ -47,7 +45,8 @@ import org.pircbotx.ReplyConstants;
  * @see ReplyConstants
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ServerResponseEvent extends Event {
 	/**

@@ -20,6 +20,8 @@ package org.pircbotx.hooks.events;
 import java.util.List;
 import java.util.ListIterator;
 
+import lombok.Getter;
+import lombok.ToString;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
 
@@ -31,7 +33,8 @@ import lombok.EqualsAndHashCode;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class OutputEvent extends Event {
 	private final String rawLine;

@@ -19,6 +19,8 @@ package org.pircbotx.hooks.events;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.CoreHooks;
@@ -34,7 +36,8 @@ import org.pircbotx.hooks.CoreHooks;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ServerPingEvent extends Event {
 	/**

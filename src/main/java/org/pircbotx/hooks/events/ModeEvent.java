@@ -19,12 +19,10 @@ package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableList;
 import javax.annotation.Nullable;
+
+import lombok.*;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.UserHostmask;
@@ -41,7 +39,8 @@ import org.pircbotx.hooks.types.GenericChannelUserEvent;
  * <p>
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ModeEvent extends Event implements GenericChannelUserEvent {
 	/**

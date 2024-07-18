@@ -17,10 +17,7 @@
  */
 package org.pircbotx.hooks.events;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.hooks.Event;
@@ -37,7 +34,8 @@ import org.pircbotx.hooks.types.GenericChannelModeEvent;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class SetChannelLimitEvent extends Event implements GenericChannelModeEvent {
 	@Getter(onMethod_={@Override})

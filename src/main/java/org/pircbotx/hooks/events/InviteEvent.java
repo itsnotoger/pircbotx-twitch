@@ -18,10 +18,8 @@
 package org.pircbotx.hooks.events;
 
 import javax.annotation.Nullable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+
+import lombok.*;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -33,7 +31,8 @@ import org.pircbotx.hooks.types.GenericUserEvent;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class InviteEvent extends Event implements GenericUserEvent {
 	/**

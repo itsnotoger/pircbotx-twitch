@@ -17,9 +17,7 @@
  */
 package org.pircbotx.hooks.events;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
@@ -30,7 +28,8 @@ import org.pircbotx.hooks.Listener;
  * 
  * @author Leon Blakey <leon.m.blakey at gmail.com>
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ListenerExceptionEvent extends ExceptionEvent {
 	private final Listener listener;

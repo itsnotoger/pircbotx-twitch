@@ -20,6 +20,7 @@ package org.pircbotx.hooks.events;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericSnapshotEvent;
@@ -38,7 +39,8 @@ import org.pircbotx.snapshot.UserChannelDaoSnapshot;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class DisconnectEvent extends Event implements GenericSnapshotEvent {
 	@Getter(onMethod_={@Override})

@@ -21,6 +21,7 @@ import com.google.common.collect.ComparisonChain;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericEvent;
 
@@ -30,7 +31,7 @@ import org.pircbotx.hooks.types.GenericEvent;
  * @author Leon Blakey
  */
 @Getter
-@EqualsAndHashCode
+@ToString
 public abstract class Event implements GenericEvent {
 	/**
 	 * Value is 0-based number of events

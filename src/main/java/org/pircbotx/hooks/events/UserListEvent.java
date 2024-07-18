@@ -18,12 +18,9 @@
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableSortedSet;
+import lombok.*;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericChannelEvent;
@@ -43,7 +40,8 @@ import org.pircbotx.hooks.types.GenericChannelEvent;
  * @see User
  * @see Channel#getUsers()
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class UserListEvent extends Event implements GenericChannelEvent {
 	/**

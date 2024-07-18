@@ -18,9 +18,8 @@
 package org.pircbotx.hooks.events;
 
 import javax.annotation.Nullable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+
+import lombok.*;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
 
@@ -30,7 +29,8 @@ import org.pircbotx.hooks.Event;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class NickAlreadyInUseEvent extends Event {
 	/**

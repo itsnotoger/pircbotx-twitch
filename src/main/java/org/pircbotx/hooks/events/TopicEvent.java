@@ -17,10 +17,7 @@
  */
 package org.pircbotx.hooks.events;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
@@ -33,7 +30,8 @@ import org.pircbotx.hooks.types.GenericChannelEvent;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TopicEvent extends Event implements GenericChannelEvent {
 	/**

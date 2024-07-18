@@ -17,9 +17,7 @@
  */
 package org.pircbotx.hooks.events;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 
@@ -29,7 +27,8 @@ import org.pircbotx.PircBotX;
  *
  * @author Leon Blakey
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class MotdEvent extends Event {
 	/**

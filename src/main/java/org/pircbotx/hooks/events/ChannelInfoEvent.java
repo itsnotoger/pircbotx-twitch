@@ -18,11 +18,9 @@
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableList;
+import lombok.*;
 import org.pircbotx.PircBotX;
 import org.pircbotx.ChannelListEntry;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.output.OutputIRC;
 
@@ -38,7 +36,8 @@ import org.pircbotx.output.OutputIRC;
  * @author Leon Blakey
  * @see OutputIRC#listChannels()
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ChannelInfoEvent extends Event {
 	/**

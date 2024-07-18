@@ -17,9 +17,7 @@
  */
 package org.pircbotx.hooks.events;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
 
@@ -28,7 +26,8 @@ import org.pircbotx.hooks.Event;
  * 
  * @author Leon Blakey <leon.m.blakey at gmail.com>
  */
-@Data
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ExceptionEvent extends Event {
 	private final Exception exception;
