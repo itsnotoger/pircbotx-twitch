@@ -23,6 +23,8 @@ import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.ReplyConstants;
 
+import java.util.List;
+
 /**
  * This is called when we receive a numeric response from the IRC server.
  * <p>
@@ -61,13 +63,17 @@ public class ServerResponseEvent extends Event {
 	 * Parsed raw line.
 	 */
 	protected final ImmutableList<String> parsedResponse;
-
+ 
 	public ServerResponseEvent(PircBotX bot, int code, @NonNull String rawLine, @NonNull ImmutableList<String> parsedResponse) {
 		super(bot);
 		this.code = code;
 		this.rawLine = rawLine;
 		this.parsedResponse = parsedResponse;
 	}
+  
+  public final List<String> getParsedResponse() {
+    return parsedResponse;
+  }
 
 	/**
 	 * Respond with a <i>raw line</i> to the server

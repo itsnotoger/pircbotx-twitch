@@ -10,7 +10,7 @@ repositories {
 }
 
 group = "com.github.itsnotoger"
-version = "2.5.1-twitchify"
+version = "2.5.2-twitchify"
 
 tasks {
     compileTestJava {
