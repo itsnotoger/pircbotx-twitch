@@ -41,15 +41,24 @@ dependencies {
     api("com.google.guava:guava:32.0.0-android")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("org.slf4j:slf4j-api:1.7.36")
+    implementation("org.slf4j:slf4j-api")
     implementation("info.unterrainer.java.tools:nullannotations:0.3")
     implementation("commons-codec:commons-codec:1.13")
 
-    implementation("org.jetbrains:annotations:24.1.0") {
-        because("modularized jar needed")
-    }
+    implementation("org.jetbrains:annotations")
 
     testImplementation("org.testng:testng:7.7.0")
     testImplementation("org.mockito:mockito-core:2.0.40-beta")
     testImplementation("ch.qos.logback:logback-classic:1.4.14")
+
+    constraints {
+        implementation("org.slf4j:slf4j-api") {
+            version { require("2.0.9") }
+            because("modularized jar needed")
+        }
+        implementation("org.jetbrains:annotations") {
+            version { require("24.1.0") }
+            because("modularized jar needed")
+        }
+    }
 }
