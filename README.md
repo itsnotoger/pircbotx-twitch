@@ -1,5 +1,9 @@
+[![](https://jitpack.io/v/itsnotoger/pircbotx-twitch.svg)](https://jitpack.io/#itsnotoger/pircbotx-twitch)
+
 ## Fork Information ##
+
 This was forked originally back in 2016 from Pircbotx version 2.1. I then added some Twitch IRC specific features.
+The only relevant branch in this project is `twitchify`, master is unchanged other than the readme.
 If you should (for some reason, even though this is pretty old and not maintained) choose to use this:
 ```kotlin
 repositories {
@@ -7,7 +11,7 @@ repositories {
     maven("https://jitpack.io")
 }
 dependencies {
-    implementation("com.github.itsnotoger:pircbotx-twitch:2.1.2-twitchify")
+    implementation("com.github.itsnotoger:pircbotx-twitch:2.1.3-twitchify")
 }
 ```
 
