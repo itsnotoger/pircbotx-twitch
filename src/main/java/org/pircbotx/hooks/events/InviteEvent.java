@@ -39,15 +39,12 @@ public class InviteEvent extends Event implements GenericUserEvent {
 	/**
 	 * The user that sent the invite.
 	 */
-	@Getter(onMethod = @_({
-			@Override,
-			@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final User user;
 	/**
 	 * The user hostmask that sent the invite.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
 	/**
 	 * The channel that we're being invited to. Provided as a string since we

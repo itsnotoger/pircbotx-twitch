@@ -41,14 +41,11 @@ import org.pircbotx.hooks.types.GenericChannelModeEvent;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SetChannelKeyEvent extends Event implements GenericChannelModeEvent {
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final Channel channel;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final User user;
 	/**
 	 * The new key for the channel.

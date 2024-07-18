@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("io.freefair.lombok") version "6.5.1"
+    id("io.freefair.lombok") version "8.6"
     `maven-publish`
 }
 
@@ -12,16 +12,15 @@ group = "org.pircbotx"
 version = "2.1.3-twitchify"
 
 tasks {
-    compileJava {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-    }
     compileTestJava {
         options.encoding = "UTF-8"
     }
 }
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11));
+    }
     withSourcesJar()
 //    withJavadocJar() TODO needs a lot of fixing
 }
@@ -39,7 +38,7 @@ publishing {
 }
 
 dependencies {
-    api("com.google.guava:guava:18.0") { because("CharMatcher.WHITESPACE ref") }
+    api("com.google.guava:guava:32.0.0-android")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.slf4j:slf4j-api:1.7.36")

@@ -41,8 +41,7 @@ import org.pircbotx.snapshot.UserChannelDaoSnapshot;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DisconnectEvent extends Event implements GenericSnapshotEvent {
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserChannelDaoSnapshot userChannelDaoSnapshot;
 	/**
 	 * Exception encountered during disconnection, if any

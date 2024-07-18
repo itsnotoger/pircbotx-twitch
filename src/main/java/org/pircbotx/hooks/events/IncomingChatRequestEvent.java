@@ -61,24 +61,17 @@ import org.pircbotx.hooks.types.GenericDCCEvent;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class IncomingChatRequestEvent extends Event implements GenericDCCEvent {
-	@Getter(onMethod = @_({
-		@Override,
-		@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final User user;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final InetAddress address;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final int port;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final String token;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final boolean passive;
 
 	public IncomingChatRequestEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, @NonNull InetAddress address, int port, String token, boolean passive) {

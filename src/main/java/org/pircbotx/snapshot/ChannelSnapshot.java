@@ -36,8 +36,7 @@ public class ChannelSnapshot extends Channel {
 	protected UserChannelDaoSnapshot dao;
 	@Getter
 	protected final Channel generatedFrom;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final String mode;
 
 	public ChannelSnapshot(Channel channel, String mode) {

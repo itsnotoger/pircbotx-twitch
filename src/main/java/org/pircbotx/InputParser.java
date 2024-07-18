@@ -289,7 +289,7 @@ public class InputParser implements Closeable {
 	 * @param rawLine The raw line of text from the server.
 	 */
 	public void handleLine(@NonNull String rawLine) throws IOException, IrcException {
-		String line = CharMatcher.WHITESPACE.trimFrom(rawLine);
+		String line = rawLine.strip();
 		log.info(INPUT_MARKER, line);
 
 		// Parse out v3Tags before
@@ -786,7 +786,7 @@ public class InputParser implements Closeable {
 		else if (code == RPL_MOTD)
 			//Example: 372 PircBotX :- Welcome to wolfe.freenode.net in Manchester, England, Uk!  Thanks to
 			//This is part of the MOTD, add a new line
-			motdBuilder.append(CharMatcher.WHITESPACE.trimFrom(parsedResponse.get(1).substring(1))).append('\n');
+			motdBuilder.append(parsedResponse.get(1).substring(1).strip()).append('\n');
 		else if (code == RPL_ENDOFMOTD) {
 			//Example: PircBotX :End of /MOTD command.
 			//End of MOTD, clean it and dispatch MotdEvent

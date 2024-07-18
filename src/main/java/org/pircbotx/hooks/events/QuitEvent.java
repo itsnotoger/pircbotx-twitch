@@ -39,17 +39,14 @@ import org.pircbotx.snapshot.UserSnapshot;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class QuitEvent extends Event implements GenericUserEvent, GenericSnapshotEvent {
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserChannelDaoSnapshot userChannelDaoSnapshot;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
 	/**
 	 * Snapshot of the user as of before the user quit.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserSnapshot user;
 	/**
 	 * The reason the user quit from the server.

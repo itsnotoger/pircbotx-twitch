@@ -48,15 +48,12 @@ public class NickChangeEvent extends Event implements GenericUserEvent {
 	/**
 	 * The user that changed their nick.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
 	/**
 	 * The user that changed their nick.
 	 */
-	@Getter(onMethod = @_({
-			@Override,
-			@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final User user;
 
 	public NickChangeEvent(PircBotX bot, @NonNull String oldNick, @NonNull String newNick,

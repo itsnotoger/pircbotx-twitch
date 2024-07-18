@@ -39,8 +39,7 @@ public class TopicEvent extends Event implements GenericChannelEvent {
 	/**
 	 * The channel that the topic belongs to.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final Channel channel;
 	/**
 	 * If known, the old topic of the channel before it was changed.

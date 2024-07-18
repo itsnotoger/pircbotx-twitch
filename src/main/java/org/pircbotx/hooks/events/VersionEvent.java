@@ -45,19 +45,15 @@ import org.pircbotx.hooks.types.GenericChannelEvent;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class VersionEvent extends Event implements GenericCTCPEvent, GenericChannelEvent {
-	@Getter(onMethod = @_({
-		@Override}))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
-	@Getter(onMethod = @_({
-		@Override}))
+	@Getter(onMethod_={@Override})
 	protected final User user;
 	/**
 	 * The target channel of the VERSION request. A value of <code>null</code>
 	 * means that that the target is us.
 	 */
-	@Getter(onMethod = @_({
-		@Override,
-		@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final Channel channel;
 
 	public VersionEvent(PircBotX bot, @NonNull UserHostmask userHostmask, @NonNull User user, Channel channel) {

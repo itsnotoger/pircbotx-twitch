@@ -39,23 +39,19 @@ import org.pircbotx.snapshot.UserSnapshot;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PartEvent extends Event implements GenericChannelUserEvent, GenericSnapshotEvent {
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserChannelDaoSnapshot userChannelDaoSnapshot;
 	/**
 	 * Snapshot of the channel as of before the user parted.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final ChannelSnapshot channel;
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
 	/**
 	 * Snapshot of the user as of before the user parted.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserSnapshot user;
 	/**
 	 * The reason for leaving the channel.

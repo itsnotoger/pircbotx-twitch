@@ -47,22 +47,17 @@ public class ModeEvent extends Event implements GenericChannelUserEvent {
 	/**
 	 * The channel that the mode operation applies to.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final Channel channel;
 	/**
 	 * The user that set the mode.
 	 */
-	@Getter(onMethod = @_({
-			@Override,
-			@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final UserHostmask userHostmask;
 	/**
 	 * The user that set the mode.
 	 */
-	@Getter(onMethod = @_({
-			@Override,
-			@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final User user;
 	/**
 	 * The mode that has been set.

@@ -34,8 +34,7 @@ import org.pircbotx.hooks.types.GenericChannelEvent;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BanListEvent extends Event implements GenericChannelEvent {
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	private final Channel channel;
 	private final ImmutableList<Entry> entries;
 

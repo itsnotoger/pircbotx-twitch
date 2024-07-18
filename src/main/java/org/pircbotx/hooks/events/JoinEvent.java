@@ -41,21 +41,17 @@ public class JoinEvent extends Event implements GenericChannelUserEvent {
 	/**
 	 * The channel which somebody joined.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final Channel channel;
 	/**
 	 * The user who joined the channel.
 	 */
-	@Getter(onMethod = @_({
-			@Override,
-			@Nullable}))
+	@Getter(onMethod_={@Override,@Nullable})
 	protected final User user;
 	/**
 	 * The user hostmask who joined the channel.
 	 */
-	@Getter(onMethod = @_(
-			@Override))
+	@Getter(onMethod_={@Override})
 	protected final UserHostmask userHostmask;
 
 	public JoinEvent(PircBotX bot, @NonNull Channel channel, @NonNull UserHostmask userHostmask, User user) {

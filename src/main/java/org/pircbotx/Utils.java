@@ -156,13 +156,13 @@ public final class Utils {
 	 */
 	public static List<String> tokenizeLine(String input) {
 		List<String> stringParts = new ArrayList<String>();
-		if (input == null || input.length() == 0)
+		if (input == null || input.isEmpty())
 			return stringParts;
 
 		//Heavily optimized string split by space with all characters after :
 		//added as a single entry. Under benchmarks, this is faster than 
 		//StringTokenizer, String.split, toCharArray, and charAt
-		String trimmedInput = CharMatcher.WHITESPACE.trimFrom(input);
+		String trimmedInput = input.strip();
 		int pos = 0, end;
 		while ((end = trimmedInput.indexOf(' ', pos)) >= 0) {
 			stringParts.add(trimmedInput.substring(pos, end));
