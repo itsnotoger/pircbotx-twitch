@@ -1,6 +1,6 @@
 # Fork information
 
-See the master branch readme for what this branch is about.
+This branch served as the initial split-off point of the fork. IIRC there were changes in this branch at some point. But later I decided to move the changes to master branch. So now this branch is obsolete.
 
 # Original readme
 
