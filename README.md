@@ -1,3 +1,9 @@
+# Fork information
+
+See the master branch readme for what this branch is about.
+
+# Original readme
+
 **June 2015 NEWS:** We've moved from Google Code! [Issues, wiki, javadocs, and git mirror are on GitHub](https://github.com/TheLQ/PircBotX). [Mercurial mirror is on BitBucket](http://bitbucket.org/TheLQ/pircbotx)
 
 [Current Version: 2.0.1](https://github.com/TheLQ/pircbotx/wiki/Downloads) - See [Migration Guide to 2.x](https://github.com/TheLQ/pircbotx/wiki/MigrationGuide2) and [ChangeLog](https://github.com/TheLQ/pircbotx/wiki/ChangeLog#201---december-3rd-2013) for more information
