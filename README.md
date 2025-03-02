@@ -11,7 +11,7 @@ repositories {
     maven("https://jitpack.io")
 }
 dependencies {
-    implementation("com.github.itsnotoger:pircbotx-twitch:2.5.0-twitchify")
+    implementation("com.github.itsnotoger:pircbotx-twitch:2.5.2-twitchify")
 }
 ```
 
